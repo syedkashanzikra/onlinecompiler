@@ -1,9 +1,7 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq; // For parsing JSON response
 
 namespace OnlineCompiler.Server.Controllers
 {
@@ -14,9 +12,24 @@ namespace OnlineCompiler.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CompileCode([FromBody] CodeRequest request)
         {
-            // Call CompileWithJudge0 method here
-            string result = await CompileWithJudge0(request.Code, request.Language);
-            return Ok(new { result });
+            try
+            {
+                Console.WriteLine($"Received Code: {request.Code}");
+                Console.WriteLine($"Language: {request.Language}");
+
+                // Call CompileWithJudge0 method to get the result
+                string result = await CompileWithJudge0(request.Code, request.Language);
+
+                // Return the result back to the frontend
+                return Ok(new { result });
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return 500 Internal Server Error
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"StackTrace: {ex.StackTrace}");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         private async Task<string> CompileWithJudge0(string code, string language)
@@ -33,25 +46,52 @@ namespace OnlineCompiler.Server.Controllers
                     "application/json"
                 );
 
-                var response = await client.PostAsync("https://api.judge0.com/submissions?base64_encoded=false&wait=true", requestContent);
-                var result = await response.Content.ReadAsStringAsync();
-                return result;
+                try
+                {
+                    // Call Judge0 API and wait for response
+                    var response = await client.PostAsync("https://api.judge0.com/submissions?base64_encoded=false&wait=true", requestContent);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        // Log the status code if the response failed
+                        string errorMessage = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine($"Judge0 API Error: {response.StatusCode} - {errorMessage}");
+                        throw new Exception("Error from Judge0 API.");
+                    }
+
+                    var result = await response.Content.ReadAsStringAsync();
+
+                    // Parse the JSON response to extract useful info
+                    var parsedResult = JObject.Parse(result);
+
+                    // Extract 'stdout' (standard output) or 'stderr' (errors)
+                    string output = parsedResult["stdout"]?.ToString() ?? parsedResult["stderr"]?.ToString() ?? "No output or error.";
+
+                    return output;
+                }
+                catch (Exception ex)
+                {
+                    // Log any exceptions that occur during the HTTP request
+                    Console.WriteLine($"Error calling Judge0 API: {ex.Message}");
+                    throw; // Rethrow the exception to be handled by the controller
+                }
             }
         }
 
+        // Helper method to map language to Judge0 language ID
         private int GetLanguageId(string language)
         {
-            // Return appropriate language ID for Judge0 API
             switch (language.ToLower())
             {
                 case "python": return 71;
                 case "cpp": return 54;
-                // Add more languages here
-                default: return 71;
+                case "javascript": return 63; // Add more languages as needed
+                default: return 71; // Default to Python if unknown
             }
         }
     }
 
+    // Request model
     public class CodeRequest
     {
         public string Code { get; set; }
