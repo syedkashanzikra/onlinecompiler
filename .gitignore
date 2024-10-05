@@ -1,0 +1,140 @@
+# .gitignore for React (frontend) and ASP.NET Core (backend) projects
+
+# Node.js (Frontend - React)
+node_modules/
+build/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+*.log.*
+npm-error.log
+
+# Dependency directories
+jspm_packages/
+node_modules/
+bower_components/
+
+# Coverage directory used by testing frameworks
+coverage/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Ignore generated Jest coverage directory
+coverage/
+.nyc_output/
+
+# ASP.NET Core (Backend)
+# ASP.NET Core specific ignore rules
+
+# Ignore build outputs
+bin/
+obj/
+out/
+
+# ASP.NET Core secret settings
+appsettings.Development.json
+appsettings.Local.json
+
+# User-specific files
+.vscode/
+*.swp
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Ignore logs and crash reports
+*.log
+*.dmp
+*.stackdump
+*.tmp
+*.temp
+
+# Ignore database and backup files
+*.mdf
+*.ldf
+*.ndf
+*.sqlite
+*.db
+
+# Ignore publish outputs
+publish/
+wwwroot/dist/
+wwwroot/node_modules/
+
+# Ignore test and coverage files
+TestResults/
+TestCoverage/
+
+# Visual Studio temporary files, build results, and
+# Windows image file caches
+*.obj
+*.exe
+*.pdb
+*.dll
+*.local
+*.cache
+*.csproj.user
+*.csproj.filters
+*.aps
+*.ncb
+*.sdf
+*.opensdf
+*.vcxproj.user
+
+# Visual Studio auto-generated files
+.vs/
+.vscode/
+
+# Allow tracking of NuGet packages (remove this from .gitignore)
+# packages/
+
+# JetBrains Rider specific
+.idea/
+.idea/*.iml
+.idea/modules.xml
+.idea/*.ipr
+.idea/workspace.xml
+.idea/.idea_modules.xml
+
+# Misc
+*.DS_Store
+*.lock
+
+# Ignore Git's conflict resolution files
+*.orig
+*.rej
+
+# macOS specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Icon must end with two \r
+Icon\r\r
+
+# The directories where the Finder stores its persistent state
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.apdisk
