@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import CodeEditor from "./Components/CodeEditor";
-import ThreeDLaptop from "./Components/ThreeDLaptop";
+
 
 
 function App() {

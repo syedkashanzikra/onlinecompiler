@@ -159,12 +159,12 @@ function CodeEditor() {
                     </Select>
                 </FormControl>
 
-                <div className="flex justify-between items-center mt-8 space-x-4">
+                <div className="flex flex-wrap justify-between items-center mt-8 space-x-4 space-y-4 md:space-x-0 md:flex-nowrap">
                     {/* Insert Snippet Button */}
                     <Button
                         size="lg"
                         onClick={() => setCode(snippets[language])}
-                        className="flex items-center justify-center px-6 py-3 text-white transition-all duration-300 ease-in-out transform bg-blue-500 rounded-md hover:bg-blue-400 hover:scale-105"
+                        className="flex w-full md:w-auto items-center justify-center px-6 py-3 text-white transition-all duration-300 ease-in-out transform bg-blue-500 rounded-md hover:bg-blue-400 hover:scale-105"
                     >
                         <AiFillFileAdd className="mr-2" /> {/* Icon for Insert Snippet */}
                         Insert "{language}" Snippet
@@ -174,7 +174,7 @@ function CodeEditor() {
                     <Button
                         size="lg"
                         onClick={submitCode}
-                        className="flex items-center justify-center px-6 py-3 text-gray-900 transition-all duration-300 ease-in-out transform bg-white border-4 rounded-md border-neon-green hover:bg-gray-200 hover:border-neon-green-light hover:shadow-neon-green hover:scale-105"
+                        className="flex w-full md:w-auto items-center justify-center px-6 py-3 text-gray-900 transition-all duration-300 ease-in-out transform bg-white border-4 rounded-md border-neon-green hover:bg-gray-200 hover:border-neon-green-light hover:shadow-neon-green hover:scale-105"
                         isLoading={loading}
                     >
                         <AiOutlinePlayCircle className="mr-2" /> {/* Icon for Run Code */}
@@ -185,12 +185,13 @@ function CodeEditor() {
                     <Button
                         size="lg"
                         onClick={downloadCode} // Trigger download on click
-                        className="flex items-center justify-center px-6 py-3 text-white transition-all duration-300 ease-in-out transform bg-green-600 rounded-md hover:bg-green-500 hover:scale-105"
+                        className="flex w-full md:w-auto items-center justify-center px-6 py-3 text-white transition-all duration-300 ease-in-out transform bg-green-600 rounded-md hover:bg-green-500 hover:scale-105"
                     >
                         <AiOutlineDownload className="mr-2" /> {/* Icon for Download Code */}
                         Download Code
                     </Button>
                 </div>
+
 
                 {/* Loading Animation */}
                 {loading && (
