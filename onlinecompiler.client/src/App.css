@@ -1,60 +1,14 @@
-﻿/* Container that holds everything */
-/*.app-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;*/ /* Full viewport height */
-    /*background-color: #f0f0f0;*/ /* Light background */
-    /*padding: 20px;
-}*/
-
-/* Editor Container */
-/*.editor-container {
-    width: 95vw;*/ /* 80% of the viewport width */
-    /*height: 70vh;*/ /* 70% of the viewport height */
-    /*background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*/ /* Soft shadow */
-    /*padding: 20px;
-    overflow: hidden;
-}*/
-
-/* Button styling for Run Code button */
-/*.run-button {
-    margin-top: 10px;
-    padding: 12px 24px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    width: 100%;*/ /* Full width button */
-/*}
-
-    .run-button:hover {
-        background-color: #0056b3;
-    }*/
-
-
-/* General layout */
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
 .app-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    background-color: #f0f0f0;
+    min-height: 100vh;
+    width: 100%; /* Now the width is fully responsive */
     padding: 20px;
-}
-
-.code-editor-container {
-    width: 80vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .run-button {
@@ -72,26 +26,23 @@
         background-color: #0056b3;
     }
 
-/* Result container styling */
+/* Full-screen editor container */
+.editor-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px); /* Leave some space for the header */
+    width: 100%;
+     /* Darker background */
+}
+
+/* Result container */
 .result-container {
     margin-top: 20px;
-    width: 80%;
+    width: 100%;
     background-color: #f8f9fa;
     padding: 20px;
     border: 1px solid #dee2e6;
     border-radius: 5px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-    .result-container h3 {
-        margin-bottom: 10px;
-    }
-
-    .result-container pre {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        font-size: 14px;
-        color: #212529;
-    }
-
-
