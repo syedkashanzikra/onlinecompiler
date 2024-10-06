@@ -216,13 +216,15 @@ online-code-compiler/
 
 ## Screenshots
 
-### Code Editor and 3D Celebration
+### Code Editor 
 
-![Code Editor Screenshot](screenshot_editor.png)
+
+![image](https://github.com/user-attachments/assets/73c74281-4e8d-4f1e-82f6-66305fe9cec0)
+
 
 ### Compilation Output and Confetti Effect
 
-![Compilation Output Screenshot](screenshot_output.png)
+![image](https://github.com/user-attachments/assets/05b6bb1a-41f3-49d8-be50-38b55a25d75f)
 
 ---
 
