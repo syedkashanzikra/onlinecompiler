@@ -102,7 +102,7 @@ function CodeEditor() {
     return (
         <div className="flex flex-col items-center w-full min-h-screen p-4 bg-gray-900 sm:p-8">
             <h1 className="mb-2 font-mono text-2xl font-bold text-center text-blue-300 sm:text-4xl">
-                Code Playground
+                Snippet  Sphere
             </h1>
             <p className="mb-6 text-sm italic font-light text-center text-gray-400 sm:text-lg sm:mb-8">
                 "Unleash your logic, build your ideas. The world is at your fingertips."
