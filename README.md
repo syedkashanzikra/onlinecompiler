@@ -1,15 +1,19 @@
-﻿```markdown
-# Online Code Compiler - React & ASP.NET Core
+﻿# Online Code Compiler - React, ASP.NET Core, Docker & Three.js
 
-This project is a web-based code editor and compiler, similar to platforms like LeetCode or Codeforces, built using **React** for the frontend and **ASP.NET Core** for the backend. It allows users to write code in multiple programming languages, compile it, and see the output in real-time.
+This project is a web-based **code editor and compiler**, similar to platforms like LeetCode or Codeforces. It allows users to write, compile, and run code in multiple programming languages with a real-time output interface.
+
+The stack consists of **React.js** for the frontend, **ASP.NET Core** for the backend, and **Docker** for containerization. The project uses **Monaco Editor** for an enhanced code-editing experience, **Three.js** for 3D visual effects, **TailwindCSS** and **Material UI** for styling, and **React Icons** for adding intuitive icons to the UI.
 
 ## Features
 
-- Code editor using **Monaco Editor** or **CodeMirror** for writing code.
-- Supports multiple programming languages (C#, Python, C++, etc.) via the **Judge0 API**.
-- Backend API built using **ASP.NET Core** that dynamically compiles and executes code.
-- Real-time output of the code compilation and execution result.
-- Simple UI for entering code and selecting the programming language.
+- **Code editor** using **Monaco Editor** for a seamless coding experience.
+- **Multiple language support** (C#, Python, C++, Go, JavaScript, Dart, Assembly, etc.) via the **Piston API**.
+- **Backend** built using **ASP.NET Core 8.0** for compiling and executing code.
+- **Real-time output** of code execution results with support for error handling.
+- **3D visual effects** for celebrations using **Three.js** after successful code execution.
+- **Dockerized** for easy deployment and isolation of the environment.
+- **TailwindCSS** for modern and responsive design and **Material UI** for intuitive components.
+- **React Icons** for consistent, beautiful icons across the interface.
 
 ---
 
@@ -25,6 +29,7 @@ This project is a web-based code editor and compiler, similar to platforms like 
 - [Running the Project](#running-the-project)
   - [Frontend](#frontend)
   - [Backend](#backend)
+  - [Docker Setup](#docker-setup)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [License](#license)
@@ -34,14 +39,19 @@ This project is a web-based code editor and compiler, similar to platforms like 
 ## Technologies Used
 
 ### Frontend
+
 - **React.js**: The core library for building the user interface.
-- **Monaco Editor** (or **CodeMirror**): For embedding a rich code editor in the frontend.
-- **Fetch API**: For making HTTP requests to the backend API.
+- **Monaco Editor**: A powerful code editor used for writing code in the frontend.
+- **Three.js**: Used for creating 3D effects and interactive celebrations upon successful code execution.
+- **TailwindCSS**: A utility-first CSS framework for fast, modern UI design.
+- **Material UI**: For pre-built, customizable React components and design.
+- **React Icons**: Icon library used to enhance the UI with professional icons.
 
 ### Backend
-- **ASP.NET Core 7.0**: The web framework used for building the backend API.
-- **Roslyn Compiler**: For dynamically compiling C# code.
-- **Judge0 API**: A third-party API that provides multi-language support for code compilation and execution.
+
+- **ASP.NET Core 8.0**: The web framework used for building the backend API that handles code compilation requests.
+- **Piston API**: Provides support for compiling and executing code in multiple languages.
+- **Docker**: Used for containerizing the application to make deployment and environment management easier.
 
 ---
 
@@ -50,16 +60,18 @@ This project is a web-based code editor and compiler, similar to platforms like 
 ### Prerequisites
 
 - **Node.js** (for running the frontend React application)
-- **.NET Core SDK 7.0** (for the ASP.NET Core backend)
+- **.NET Core SDK 8.0** (for the ASP.NET Core backend)
+- **Docker** (optional, for containerization)
 - **Visual Studio 2022** or **Visual Studio Code** (for development)
-- **Judge0 API Key** (for multi-language compilation support)
+- **Piston API** (used for multi-language support)
 
 ### Installation Steps
 
 1. **Clone the Repository**:
+
    ```bash
-   git clone https://github.com/yourusername/online-code-compiler.git
-   cd online-code-compiler
+   git clone https://github.com/syedkashanzikra/onlinecompiler.git
+   cd onlinecompiler-master
    ```
 
 2. **Setting Up the Frontend**:
@@ -67,7 +79,7 @@ This project is a web-based code editor and compiler, similar to platforms like 
    Navigate to the frontend directory and install the necessary dependencies:
 
    ```bash
-   cd frontend
+   cd OnlineCompiler.client
    npm install
    ```
 
@@ -76,14 +88,14 @@ This project is a web-based code editor and compiler, similar to platforms like 
    Navigate to the backend directory and restore the necessary NuGet packages:
 
    ```bash
-   cd backend
+   cd OnlineCompiler.Server
    dotnet restore
    ```
 
-4. **Setting Up the Judge0 API** (Optional for multi-language support):
+4. **Setting Up the Piston API** (for multi-language support):
 
-   - Obtain an API key from the Judge0 API (optional, if you want multi-language support).
-   - Configure the API key in your backend project, typically in the `appsettings.json` file or directly within the code that makes HTTP requests to the Judge0 API.
+   - The Piston API allows you to compile multiple languages. You don't need an API key.
+   - The backend project is already configured to use Piston's public API for compiling code.
 
 ---
 
@@ -91,7 +103,7 @@ This project is a web-based code editor and compiler, similar to platforms like 
 
 ### Compile Code (POST `/api/compile`)
 
-**Description**: This endpoint accepts code and a programming language, compiles the code, and returns the output.
+**Description**: This endpoint accepts code and the programming language, compiles the code, and returns the output or an error message.
 
 #### Request Body:
 
@@ -133,19 +145,21 @@ This project is a web-based code editor and compiler, similar to platforms like 
 
 ```
 online-code-compiler/
-├── backend/                  # ASP.NET Core backend code
+├── OnlineCompiler.Server/                  # ASP.NET Core backend code
 │   ├── Controllers/          # API Controllers for compiling code
 │   ├── Models/               # Request and response models
-│   └── Services/             # Code compilation logic, including Roslyn and Judge0 API calls
+│   └── Services/             # Code compilation logic, including the Piston API integration
 │   └── Program.cs            # Entry point for ASP.NET Core app
 │
-├── frontend/                 # React frontend code
+├── OnlineCompiler.client/                 # React frontend code
 │   ├── public/               # Static assets
 │   ├── src/                  # Main source folder
 │   │   ├── components/       # React components
-│   │   └── App.js            # Main application component
+│   │   ├── threejs/          # Three.js components for 3D celebration
+│   │   ├── App.js            # Main application component
 │   └── package.json          # Frontend dependencies
 │
+├── docker-compose.yml        # Docker setup for both frontend and backend
 ├── README.md                 # Project README
 └── .gitignore                # Git ignore file
 ```
@@ -157,39 +171,57 @@ online-code-compiler/
 ### Frontend
 
 1. Navigate to the `frontend` directory:
+
    ```bash
    cd frontend
    ```
 
 2. Start the React development server:
+
    ```bash
    npm start
    ```
 
-   This will start the development server at `http://localhost:3000`.
+   This will start the development server at `http://localhost:5173`.
 
 ### Backend
 
 1. Navigate to the `backend` directory:
+
    ```bash
    cd backend
    ```
 
 2. Start the ASP.NET Core application:
+
    ```bash
    dotnet run
    ```
 
-   This will launch the backend API on `http://localhost:5000`.
+   This will launch the backend API on `http://localhost:7293`.
+
+### Docker Setup
+
+1. **Build and Run the Application with Docker**:
+
+   From the root directory, you can use Docker Compose to spin up both the frontend and backend:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+   This will start both the frontend (`http://localhost:5173`) and the backend API (`http://localhost:7293`).
 
 ---
 
 ## Screenshots
 
-### Code Editor
+### Code Editor and 3D Celebration
+
 ![Code Editor Screenshot](screenshot_editor.png)
 
-### Compilation Output
+### Compilation Output and Confetti Effect
+
 ![Compilation Output Screenshot](screenshot_output.png)
 
 ---
@@ -212,11 +244,11 @@ Please ensure your code follows the project's coding standards and is well-teste
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```
+---
 
-### Steps to Customize:
+### Summary of Additions:
 
-1. **Repository URL**: Update the repository URL in the cloning step.
-2. **Judge0 API Key**: Add more detailed instructions on how to set up the Judge0 API if you plan to use it.
-3. **Screenshots**: Add relevant screenshots in the `Screenshots` section by capturing your code editor and output views.
-4. **License**: Ensure you add a `LICENSE` file if you're including licensing information.
+- **Three.js**: Added for 3D celebration effects.
+- **Docker**: Instructions for running both frontend and backend using Docker.
+- **Material UI & React Icons**: Mentioned as part of the UI improvement.
+- **Piston API**: Detailed how it supports multiple languages.
