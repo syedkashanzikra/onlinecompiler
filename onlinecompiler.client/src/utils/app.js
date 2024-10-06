@@ -1,8 +1,6 @@
-// Define your base URL for the backend API
 const BASE_URL = "https://localhost:7293";
 
 
-// Utility function to make GET requests
 export const apiGet = async (route) => {
     const response = await fetch(`${BASE_URL}${route}`, {
         method: "GET",
@@ -16,7 +14,7 @@ export const apiGet = async (route) => {
     return response.json();
 };
 
-// Utility function to make POST requests
+
 export const apiPost = async (route, body) => {
     const response = await fetch(`${BASE_URL}${route}`, {
         method: "POST",
@@ -46,7 +44,6 @@ export const apiPut = async (route, body) => {
     return response.json();
 };
 
-// DELETE request
 export const apiDelete = async (route) => {
     const response = await fetch(`${BASE_URL}${route}`, {
         method: "DELETE",

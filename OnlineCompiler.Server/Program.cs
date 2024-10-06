@@ -7,10 +7,10 @@ builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        builder => builder.WithOrigins("https://localhost:5173") // Allow the frontend URL
+        builder => builder.WithOrigins("https://localhost:5173") 
                           .AllowAnyHeader()
                           .AllowAnyMethod()
-                          .AllowCredentials()); // Allow credentials if needed
+                          .AllowCredentials()); 
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    width: 100%; /* Now the width is fully responsive */
+    width: 100%;
     padding: 20px;
 }
 
@@ -26,14 +26,14 @@
         background-color: #0056b3;
     }
 
-/* Full-screen editor container */
+
 .editor-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 100px); /* Leave some space for the header */
+    height: calc(100vh - 100px); 
     width: 100%;
-     /* Darker background */
+  
 }
 
 /* Result container */

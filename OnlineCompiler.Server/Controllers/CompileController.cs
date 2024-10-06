@@ -9,6 +9,24 @@ namespace OnlineCompiler.Server.Controllers
     [ApiController]
     public class CompileController : ControllerBase
     {
+        //[HttpPost]
+        //public async Task<IActionResult> CompileCode([FromBody] CodeRequest request)
+        //{
+        //    try
+        //    {
+        //        Console.WriteLine($"Received Code: {request.Code}");
+        //        Console.WriteLine($"Language: {request.Language}");
+
+        //        string result = await CompileWithPiston(request.Code, request.Language);
+        //        return Ok(new { result });
+        //    }
+        //    catch (Exception ex) { 
+        //        Console.WriteLine($"Error: {ex.Message}");
+        //        Console.WriteLine($"StackTrace: {ex.StackTrace}");
+        //        return StatusCode(500, "An error occurred while processing your request.");
+        //    }
+        //}
+
         [HttpPost]
         public async Task<IActionResult> CompileCode([FromBody] CodeRequest request)
         {
@@ -17,21 +35,63 @@ namespace OnlineCompiler.Server.Controllers
                 Console.WriteLine($"Received Code: {request.Code}");
                 Console.WriteLine($"Language: {request.Language}");
 
-                // Call CompileWithPiston method to get the result
-                string result = await CompileWithPiston(request.Code, request.Language);
-
-                // Return the result back to the frontend
+                string result = await CompileWithPiston(request.Code, request.Language, request.UserInput);  // Include user input
                 return Ok(new { result });
             }
             catch (Exception ex)
             {
-                // Log the error and return 500 Internal Server Error
                 Console.WriteLine($"Error: {ex.Message}");
                 Console.WriteLine($"StackTrace: {ex.StackTrace}");
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
-        private async Task<string> CompileWithPiston(string code, string language)
+
+
+        //private async Task<string> CompileWithPiston(string code, string language)
+        //{
+        //    using (var client = new HttpClient())
+        //    {
+        //        var requestContent = new StringContent(
+        //            JsonConvert.SerializeObject(new
+        //            {
+        //                language = language.ToLower(),
+        //                version = "*", // Use the latest version available for the language
+        //                files = new[]
+        //                {
+        //            new { content = code }
+        //                }
+        //            }),
+        //            Encoding.UTF8,
+        //            "application/json"
+        //        );
+
+        //        try
+        //        {
+        //            var response = await client.PostAsync("https://emkc.org/api/v2/piston/execute", requestContent);
+
+        //            if (!response.IsSuccessStatusCode)
+        //            {
+        //                string errorMessage = await response.Content.ReadAsStringAsync();
+        //                Console.WriteLine($"Piston API Error: {response.StatusCode} - {errorMessage}");
+        //                throw new Exception("Error from Piston API.");
+        //            }
+
+        //            var result = await response.Content.ReadAsStringAsync();
+        //            var parsedResult = JObject.Parse(result);
+        //            string stdout = parsedResult["run"]?["stdout"]?.ToString() ?? "";
+        //            string stderr = parsedResult["run"]?["stderr"]?.ToString() ?? "";
+        //            return !string.IsNullOrEmpty(stderr) ? $"Error: {stderr}" : stdout;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine($"Error calling Piston API: {ex.Message}");
+        //            throw; 
+        //        }
+        //    }
+        //}
+
+
+        private async Task<string> CompileWithPiston(string code, string language, string? userInput)
         {
             using (var client = new HttpClient())
             {
@@ -43,7 +103,8 @@ namespace OnlineCompiler.Server.Controllers
                         files = new[]
                         {
                     new { content = code }
-                        }
+                        },
+                        stdin = userInput  // Include user input (stdin) here
                     }),
                     Encoding.UTF8,
                     "application/json"
@@ -61,26 +122,20 @@ namespace OnlineCompiler.Server.Controllers
                     }
 
                     var result = await response.Content.ReadAsStringAsync();
-
-                    // Parse the JSON response to extract useful info
                     var parsedResult = JObject.Parse(result);
-
-                    // Extract 'stdout' (standard output) and 'stderr' (errors)
                     string stdout = parsedResult["run"]?["stdout"]?.ToString() ?? "";
                     string stderr = parsedResult["run"]?["stderr"]?.ToString() ?? "";
-
-                    // Return error message if stderr exists, otherwise return stdout
                     return !string.IsNullOrEmpty(stderr) ? $"Error: {stderr}" : stdout;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error calling Piston API: {ex.Message}");
-                    throw; // Rethrow the exception to be handled by the controller
+                    throw;
                 }
             }
         }
 
-        // Helper method to map language to Piston language name
+
         private string GetLanguage(string language)
         {
             switch (language.ToLower())
@@ -115,5 +170,7 @@ namespace OnlineCompiler.Server.Controllers
     {
         public string Code { get; set; }
         public string Language { get; set; }
+
+        public string? UserInput { get; set; }
     }
 }
