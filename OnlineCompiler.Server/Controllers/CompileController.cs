@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq; // For parsing JSON response
+using Newtonsoft.Json.Linq; 
 
 namespace OnlineCompiler.Server.Controllers
 {
@@ -17,8 +17,8 @@ namespace OnlineCompiler.Server.Controllers
                 Console.WriteLine($"Received Code: {request.Code}");
                 Console.WriteLine($"Language: {request.Language}");
 
-                // Call CompileWithJudge0 method to get the result
-                string result = await CompileWithJudge0(request.Code, request.Language);
+                // Call CompileWithPiston method to get the result
+                string result = await CompileWithPiston(request.Code, request.Language);
 
                 // Return the result back to the frontend
                 return Ok(new { result });
@@ -32,15 +32,19 @@ namespace OnlineCompiler.Server.Controllers
             }
         }
 
-        private async Task<string> CompileWithJudge0(string code, string language)
+        private async Task<string> CompileWithPiston(string code, string language)
         {
             using (var client = new HttpClient())
             {
                 var requestContent = new StringContent(
                     JsonConvert.SerializeObject(new
                     {
-                        source_code = code,
-                        language_id = GetLanguageId(language) // e.g., 71 for Python
+                        language = language.ToLower(),
+                        version = "*", // Use the latest version available for the language
+                        files = new[]
+                        {
+                            new { content = code }
+                        }
                     }),
                     Encoding.UTF8,
                     "application/json"
@@ -48,15 +52,14 @@ namespace OnlineCompiler.Server.Controllers
 
                 try
                 {
-                    // Call Judge0 API and wait for response
-                    var response = await client.PostAsync("https://api.judge0.com/submissions?base64_encoded=false&wait=true", requestContent);
+                    // Use the public Piston API endpoint
+                    var response = await client.PostAsync("https://emkc.org/api/v2/piston/execute", requestContent);
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        // Log the status code if the response failed
                         string errorMessage = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine($"Judge0 API Error: {response.StatusCode} - {errorMessage}");
-                        throw new Exception("Error from Judge0 API.");
+                        Console.WriteLine($"Piston API Error: {response.StatusCode} - {errorMessage}");
+                        throw new Exception("Error from Piston API.");
                     }
 
                     var result = await response.Content.ReadAsStringAsync();
@@ -65,28 +68,27 @@ namespace OnlineCompiler.Server.Controllers
                     var parsedResult = JObject.Parse(result);
 
                     // Extract 'stdout' (standard output) or 'stderr' (errors)
-                    string output = parsedResult["stdout"]?.ToString() ?? parsedResult["stderr"]?.ToString() ?? "No output or error.";
+                    string output = parsedResult["run"]?["stdout"]?.ToString() ?? parsedResult["run"]?["stderr"]?.ToString() ?? "No output or error.";
 
                     return output;
                 }
                 catch (Exception ex)
                 {
-                    // Log any exceptions that occur during the HTTP request
-                    Console.WriteLine($"Error calling Judge0 API: {ex.Message}");
+                    Console.WriteLine($"Error calling Piston API: {ex.Message}");
                     throw; // Rethrow the exception to be handled by the controller
                 }
             }
         }
 
-        // Helper method to map language to Judge0 language ID
-        private int GetLanguageId(string language)
+        // Helper method to map language to Piston language name
+        private string GetLanguage(string language)
         {
             switch (language.ToLower())
             {
-                case "python": return 71;
-                case "cpp": return 54;
-                case "javascript": return 63; // Add more languages as needed
-                default: return 71; // Default to Python if unknown
+                case "python": return "python";
+                case "cpp": return "cpp";
+                case "javascript": return "javascript"; // Add more languages as needed
+                default: return "python"; // Default to Python if unknown
             }
         }
     }
