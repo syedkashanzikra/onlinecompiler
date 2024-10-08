@@ -9,24 +9,6 @@ namespace OnlineCompiler.Server.Controllers
     [ApiController]
     public class CompileController : ControllerBase
     {
-        //[HttpPost]
-        //public async Task<IActionResult> CompileCode([FromBody] CodeRequest request)
-        //{
-        //    try
-        //    {
-        //        Console.WriteLine($"Received Code: {request.Code}");
-        //        Console.WriteLine($"Language: {request.Language}");
-
-        //        string result = await CompileWithPiston(request.Code, request.Language);
-        //        return Ok(new { result });
-        //    }
-        //    catch (Exception ex) { 
-        //        Console.WriteLine($"Error: {ex.Message}");
-        //        Console.WriteLine($"StackTrace: {ex.StackTrace}");
-        //        return StatusCode(500, "An error occurred while processing your request.");
-        //    }
-        //}
-
         [HttpPost]
         public async Task<IActionResult> CompileCode([FromBody] CodeRequest request)
         {
@@ -46,8 +28,7 @@ namespace OnlineCompiler.Server.Controllers
             }
         }
 
-
-        //private async Task<string> CompileWithPiston(string code, string language)
+        //private async Task<string> CompileWithPiston(string code, string language, string? userInput)
         //{
         //    using (var client = new HttpClient())
         //    {
@@ -59,7 +40,8 @@ namespace OnlineCompiler.Server.Controllers
         //                files = new[]
         //                {
         //            new { content = code }
-        //                }
+        //                },
+        //                stdin = userInput  // Include user input (stdin) here
         //            }),
         //            Encoding.UTF8,
         //            "application/json"
@@ -85,26 +67,29 @@ namespace OnlineCompiler.Server.Controllers
         //        catch (Exception ex)
         //        {
         //            Console.WriteLine($"Error calling Piston API: {ex.Message}");
-        //            throw; 
+        //            throw;
         //        }
         //    }
         //}
+
+
+
 
 
         private async Task<string> CompileWithPiston(string code, string language, string? userInput)
         {
             using (var client = new HttpClient())
             {
+                // Split multiple inputs by newline or other delimiter, e.g., commas, then join with newlines.
+                string formattedInput = userInput != null ? string.Join("\n", userInput.Split(',')) : "";
+
                 var requestContent = new StringContent(
                     JsonConvert.SerializeObject(new
                     {
                         language = language.ToLower(),
                         version = "*", // Use the latest version available for the language
-                        files = new[]
-                        {
-                    new { content = code }
-                        },
-                        stdin = userInput  // Include user input (stdin) here
+                        files = new[] { new { content = code } },
+                        stdin = formattedInput  // Include formatted input (split into multiple lines)
                     }),
                     Encoding.UTF8,
                     "application/json"
@@ -134,7 +119,6 @@ namespace OnlineCompiler.Server.Controllers
                 }
             }
         }
-
 
         private string GetLanguage(string language)
         {
